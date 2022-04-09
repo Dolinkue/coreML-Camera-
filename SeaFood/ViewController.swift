@@ -6,14 +6,28 @@
 //
 
 import UIKit
+import CoreML
+import Vision
 
-class ViewController: UIViewController {
 
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    @IBOutlet weak var imageView: UIImageView!
+    
+    let imagepicker = UIImagePickerController()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        imagepicker.delegate = self
+        // con esto llamamos a la camara para que la pueda usar el usuario
+        imagepicker.sourceType = .camera
+        
     }
 
-
+    @IBAction func cameraTapped(_ sender: UIBarButtonItem) {
+    }
+    
 }
 
