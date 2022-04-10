@@ -33,7 +33,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       if let userPickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imageView.image = userPickedImage
           
-          // para usar coreML
+          // para usar coreML, convertimas la imagen que eligio en CIImage
           guard let ciimage = CIImage(image: userPickedImage) else{
               fatalError()
           }
@@ -50,21 +50,28 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //para implementar coreML
     func detect (image: CIImage) {
         
-        // este model se utiliza para clasificar la imagen
+        // cargamos el modelo de CoreML en esta constante
         guard let model = try? VNCoreMLModel(for: Inceptionv3().model) else {
             fatalError()
         }
-        //aca consultamos al coreML
+        //aca consultamos al coreML, y pedimos que clasifique la imagen que le pasamos
         let request = VNCoreMLRequest(model: model) { request, error in
             guard let results = request.results as? [VNClassificationObservation] else {
                 fatalError()
             }
             
-            print(results)
+            if let firtResult = results.first {
+                
+                if firtResult.identifier.contains("") {
+                    self.navigationItem.title = firtResult.identifier
+                } else {
+                    self.navigationItem.title = "not found"
+                }
+            }
         }
-        
+        // aca pasamos la imagen que seleciono
         let handler = VNImageRequestHandler(ciImage: image)
-        
+        // hacemos la perform de la request para saber que es la imagen
         try! handler.perform([request])
     }
     
